@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="type">
+        <item >床头屏</item>
+        <item >门口屏</item>
+        <item >走廊屏</item>
+    </string-array>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#323232</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="colorBlack">#000</color>
+    <color name="colorGray1">#848484</color>
+    <color name="colorGray2">#323232</color>
+    <color name="colorWhite">#fff</color>
+    <color name="libui_DodgerBlue">#1E90FF</color>
+    <color name="libui_BlueDeep">#026ED6</color>
+</resources>

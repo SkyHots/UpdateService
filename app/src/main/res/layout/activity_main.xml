@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".updateservice.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:text="@string/deviceType"
+            android:textColor="@color/colorGray1"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical"
+            android:hint="@string/pleasePickDeviceType"
+            android:onClick="pickDeviceType"
+            android:paddingRight="15dp"
+            android:textColor="@color/colorGray2"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+        <!--<Spinner
+            android:spinnerMode="dropdown"
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical"
+            android:paddingRight="15dp"
+            android:textColor="@color/colorGray2"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />-->
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:text="@string/ip"
+            android:textColor="@color/colorGray1"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/ip_input"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="end|center_vertical"
+            android:hint="@string/inputIp"
+            android:paddingRight="15dp"
+            android:textColor="@color/colorGray2"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:text="@string/port"
+            android:textColor="@color/colorGray1"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/port_input"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="end|center_vertical"
+            android:hint="@string/inputPort"
+            android:paddingRight="15dp"
+            android:textColor="@color/colorGray2"
+            android:textCursorDrawable="@null"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp">
+
+        <Button
+            android:id="@+id/finish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_welcome_login_drawable"
+            android:onClick="finish"
+            android:text="@string/back"
+            android:textColor="@color/colorWhite"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/test"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_welcome_login_drawable"
+            android:onClick="test"
+            android:text="@string/test"
+            android:textColor="@color/colorWhite"
+            android:textSize="25sp" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_welcome_login_drawable"
+            android:onClick="save"
+            android:text="@string/save"
+            android:textColor="@color/colorWhite"
+            android:textSize="25sp" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

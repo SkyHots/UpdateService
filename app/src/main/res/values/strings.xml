@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">UpdateService</string>
+    <string name="ip">服务器ip:</string>
+    <string name="port">端口:</string>
+    <string name="inputPort">请输入服务器端口</string>
+    <string name="inputIp">请输入服务器地址</string>
+    <string name="saveSuccess">保存成功</string>
+    <string name="inputIpOrPort">请输入ip或者端口</string>
+    <string name="back">返回</string>
+    <string name="save">保存</string>
+    <string name="test">测试</string>
+    <string name="alreadyIsNews">当前版本已经是最新版本</string>
+    <string name="deviceType">设备类型:</string>
+    <string name="pleasePickDeviceType">请选择设备类型</string>
+</resources>
