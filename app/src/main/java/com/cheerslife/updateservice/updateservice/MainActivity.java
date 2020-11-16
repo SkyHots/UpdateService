@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "onCreate: MainActivity");
 
         initView();
-        mService = new Intent(this, ApkService.class);
+        mService = new Intent(this, UpdateService.class);
         startService(mService);
 
         int i = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);

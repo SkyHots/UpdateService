@@ -38,28 +38,10 @@ public class App extends Application {
         Log.e("DeviceType", "getDeviceType: " + deviceType);
         if (deviceType == 1) {
             routKey.add(C.BedsideScreen + ".#");//床头屏
-            /*Manage.readConfigXML(Manage.mFileBedDoor);
-            if (TextUtils.isEmpty(Manage.OFFICE_ID)) {
-                routKey.add(C.BedsideScreen + ".#");//床头屏
-            } else {
-                routKey.add(C.BedsideScreen + "." + Manage.OFFICE_ID + ".#");//床头屏
-            }*/
         } else if (deviceType == 2) {
             routKey.add(C.DoorScreen + ".#");//门口屏
-            /*Manage.readConfigXML(Manage.mFileBedDoor);
-            if (TextUtils.isEmpty(Manage.OFFICE_ID)) {
-                routKey.add(C.DoorScreen + ".#");//门口屏
-            } else {
-                routKey.add(C.DoorScreen + "." + Manage.OFFICE_ID + ".#");//门口屏
-            }*/
         } else if (deviceType == 3) {
             routKey.add(C.CorridorScreen + ".#");//走廊屏
-            /*Manage.readConfigXML(Manage.mFileCorridor);
-            if (TextUtils.isEmpty(Manage.OFFICE_ID)) {
-                routKey.add(C.CorridorScreen + ".#");//走廊屏
-            } else {
-                routKey.add(C.CorridorScreen + "." + Manage.OFFICE_ID + ".#");//走廊屏
-            }*/
         }
         RabbitConfig config = new RabbitConfig.Builder()
                 .userName("lifescreen")

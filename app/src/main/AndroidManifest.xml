@@ -45,7 +45,7 @@
         </receiver>
 
         <service
-            android:name="com.cheerslife.updateservice.updateservice.ApkService"
+            android:name="com.cheerslife.updateservice.updateservice.UpdateService"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedService">

@@ -15,6 +15,8 @@ public class C {
     public static final String BedsideScreen = "BedsideScreen";
     public static final String CorridorScreen = "CorridorScreen";
 
+    public static final String DEVICE_FACTORY = "狄耐克";
+
     public static final String IP = "ip";
     public static final String PORT = "port";
     public static final String DEVICE_TYPE = "device_type";

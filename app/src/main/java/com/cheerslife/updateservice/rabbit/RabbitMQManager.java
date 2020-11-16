@@ -16,6 +16,10 @@ public class RabbitMQManager {
     private static final String TAG = "RabbitMQManager";
     private RabbitConfig config;
 
+    public RabbitConfig getConfig() {
+        return config;
+    }
+
     private ConnectionFactory mConnectionFactory = new ConnectionFactory();
     private SenderService mSenderService;
     private ReceiveService mReceiveService;
