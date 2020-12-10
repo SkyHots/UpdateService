@@ -86,13 +86,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void save(View view) {
-        if (TextUtils.isEmpty(mDeviceType.getText().toString())){
+        if (TextUtils.isEmpty(mDeviceType.getText().toString())) {
             ToastUtils.showLong("请选择设备类型");
             return;
         }
 
-        String ip = mIp.getText().toString();
-        String port = mPort.getText().toString();
+        String ip = mIp.getText().toString().trim();
+        String port = mPort.getText().toString().trim();
         if (TextUtils.isEmpty(ip) || TextUtils.isEmpty(port)) {
             ToastUtils.showShort(getString(R.string.inputIpOrPort));
         } else {

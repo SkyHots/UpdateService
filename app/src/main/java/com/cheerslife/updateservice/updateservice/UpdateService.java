@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.blankj.utilcode.util.AppUtils;
@@ -51,7 +52,7 @@ public class UpdateService extends Service {
         switch (deviceType) {
             case C.BedsideScreen:
                 Manage.readConfigXML(Manage.mFileBedDoor);
-                if (officeID.equals("全部") || officeID.equals(Manage.OFFICE_ID)) {
+                if (officeID.equals("全部") || officeID.equals(Manage.OFFICE_ID) || TextUtils.isEmpty(Manage.OFFICE_ID)) {
                     Log.e(TAG, "床头屏下载更新APK ");
                     String verName = getVerName(C.BED_DOOR_PACKAGE_NAME);
                     DownloadHelper.instance().downloadAPK(apkUrl, apkName, new DownloadHelper.CallBack() {
@@ -76,12 +77,12 @@ public class UpdateService extends Service {
                         }
                     });
                 } else {
-                    ToastUtils.showLong("当前床头屏设备科室不匹配");
+                    Log.e(TAG, "当前床头屏设备科室不匹配");
                 }
                 break;
             case C.DoorScreen:
                 Manage.readConfigXML(Manage.mFileBedDoor);
-                if (officeID.equals("全部") || officeID.equals(Manage.OFFICE_ID)) {
+                if (officeID.equals("全部") || officeID.equals(Manage.OFFICE_ID) || TextUtils.isEmpty(Manage.OFFICE_ID)) {
                     Log.e(TAG, "门口屏下载更新APK ");
                     String verName = getVerName(C.BED_DOOR_PACKAGE_NAME);
                     DownloadHelper.instance().downloadAPK(apkUrl, apkName, new DownloadHelper.CallBack() {
@@ -106,12 +107,12 @@ public class UpdateService extends Service {
                         }
                     });
                 } else {
-                    ToastUtils.showLong("当前门口屏设备科室不匹配");
+                    Log.e(TAG, "当前门口屏设备科室不匹配");
                 }
                 break;
             case C.CorridorScreen:
                 Manage.readConfigXML(Manage.mFileCorridor);
-                if (officeID.equals("全部") || officeID.equals(Manage.OFFICE_ID)) {
+                if (officeID.equals("全部") || officeID.equals(Manage.OFFICE_ID) || TextUtils.isEmpty(Manage.OFFICE_ID)) {
                     Log.e(TAG, "走廊屏下载更新APK ");
                     String verName = getVerName(C.CORRIDOR_PACKAGE_NAME);
                     DownloadHelper.instance().downloadAPK(apkUrl, apkName, new DownloadHelper.CallBack() {
@@ -136,7 +137,7 @@ public class UpdateService extends Service {
                         }
                     });
                 } else {
-                    ToastUtils.showLong("当前走廊屏设备科室不匹配");
+                    Log.e(TAG, "当前走廊屏设备科室不匹配");
                 }
                 break;
         }
@@ -155,6 +156,8 @@ public class UpdateService extends Service {
                         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent1);
                     publishRabbitMQ(currentVersion, newVersion, "成功", "success", id);
+                } else {
+                    publishRabbitMQ(currentVersion, newVersion, "失败", "安装apk失败[May be permission refuse!]", id);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

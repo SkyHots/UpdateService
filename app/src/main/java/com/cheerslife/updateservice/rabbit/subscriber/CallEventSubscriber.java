@@ -64,24 +64,29 @@ public class CallEventSubscriber implements IDelegateSubscriber<CallEventEntity>
                         deviceType.equals(C.DoorScreen) ?
                                 C.BED_DOOR_PACKAGE_NAME : deviceType.equals(C.CorridorScreen) ? C.CORRIDOR_PACKAGE_NAME : "lll");
                 String versionNameNew = entities.versionCode;
-                if (verName.equals(versionNameNew))
+                if (verName.equals(versionNameNew)) {
+                    Log.e(TAG, "版本号相同，不下载！");
                     return;
+                }
 
                 switch (deviceType) {
                     case C.BedsideScreen:
                         if (!routingKey.contains(C.BedsideScreen)) {//key不匹配
+                            Log.e(TAG, "当前设备不是床头屏，不下载！");
                             return;
                         }
                         Manage.readConfigXML(Manage.mFileBedDoor);
                         break;
                     case C.DoorScreen:
                         if (!routingKey.contains(C.DoorScreen)) {//key不匹配
+                            Log.e(TAG, "当前设备不是门口屏，不下载！");
                             return;
                         }
                         Manage.readConfigXML(Manage.mFileBedDoor);
                         break;
                     case C.CorridorScreen:
                         if (!routingKey.contains(C.CorridorScreen)) {//key不匹配
+                            Log.e(TAG, "当前设备不是走廊屏，不下载！");
                             return;
                         }
                         Manage.readConfigXML(Manage.mFileCorridor);

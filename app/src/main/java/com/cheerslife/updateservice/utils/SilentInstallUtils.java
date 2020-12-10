@@ -56,6 +56,7 @@ public final class SilentInstallUtils {
     /**
      * 静默安装
      * 会依次调用Stream-->反射-->Shell
+     *
      * @param apkFile APK文件
      * @return 成功或失败
      */
@@ -63,7 +64,8 @@ public final class SilentInstallUtils {
     @RequiresPermission(Manifest.permission.INSTALL_PACKAGES)
     public static synchronized boolean install(Context context, String apkFile) throws InterruptedException {
         File file;
-        if (TextUtils.isEmpty(apkFile) || !(file = new File(apkFile)).exists()) return false;
+        if (TextUtils.isEmpty(apkFile) || !(file = new File(apkFile)).exists())
+            return false;
         context = context.getApplicationContext();
         //加上apk合法性判断
         AppUtils.AppInfo apkInfo = AppUtils.getApkInfo(file);
@@ -112,43 +114,45 @@ public final class SilentInstallUtils {
 
 
         }
-        try {
+        //        try {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                //由于调用PackageInstaller安装失败的情况下, 重复安装会导致内存占用无限增长的问题.
-                //所以在安装之前需要判断当前包名是否有过失败记录, 如果以前有过失败记录, 则不能再使用该方法进行安装
-                if (sPreferences == null) {
-                    sPreferences = context.getSharedPreferences(SP_NAME_PACKAGE_INSTALL_RESULT, Context.MODE_PRIVATE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //由于调用PackageInstaller安装失败的情况下, 重复安装会导致内存占用无限增长的问题.
+            //所以在安装之前需要判断当前包名是否有过失败记录, 如果以前有过失败记录, 则不能再使用该方法进行安装
+            if (sPreferences == null) {
+                sPreferences = context.getSharedPreferences(SP_NAME_PACKAGE_INSTALL_RESULT, Context.MODE_PRIVATE);
+            }
+            String packageName = apkInfo.getPackageName();
+            boolean canInstall = sPreferences.getBoolean(packageName, true);
+            if (canInstall) {
+                boolean success = installByPackageInstaller(context, file, apkInfo);
+                sPreferences.edit().putBoolean(packageName, success).apply();
+                if (success) {
+                    LogUtils.iTag(TAG, "Install Success[PackageInstaller]: " + file.getAbsolutePath());
+                    return true;
                 }
-                String packageName = apkInfo.getPackageName();
-                boolean canInstall = sPreferences.getBoolean(packageName, true);
-                if (canInstall) {
-                    boolean success = installByPackageInstaller(context, file, apkInfo);
-                    sPreferences.edit().putBoolean(packageName, success).apply();
-                    if (success) {
-                        LogUtils.iTag(TAG, "Install Success[PackageInstaller]: " + file.getAbsolutePath());
-                        return true;
-                    }
-                }
             }
-
-            if (installByReflect(context, file)) {
-                if (sPreferences != null) sPreferences.edit().putBoolean(apkInfo.getPackageName(), true).apply();
-                LogUtils.iTag(TAG, "Install Success[Reflect]", file.getPath());
-                return true;
-            }
-
-            if (installByShell(file, DeviceUtils.isDeviceRooted())) {
-                if (sPreferences != null) sPreferences.edit().putBoolean(apkInfo.getPackageName(), true).apply();
-                LogUtils.iTag(TAG, "Install Success[Shell]", file.getPath());
-                return true;
-            }
-        } catch (InterruptedException e) {
-            throw e;
-        } catch (Throwable e) {
-            e.printStackTrace();
-            LogUtils.wTag(TAG, e);
         }
+
+        if (installByReflect(context, file)) {
+            if (sPreferences != null)
+                sPreferences.edit().putBoolean(apkInfo.getPackageName(), true).apply();
+            LogUtils.iTag(TAG, "Install Success[Reflect]", file.getPath());
+            return true;
+        }
+
+        if (installByShell(file, DeviceUtils.isDeviceRooted())) {
+            if (sPreferences != null)
+                sPreferences.edit().putBoolean(apkInfo.getPackageName(), true).apply();
+            LogUtils.iTag(TAG, "Install Success[Shell]", file.getPath());
+            return true;
+        }
+        //        } catch (InterruptedException e) {
+        //            throw e;
+        //        } catch (Throwable e) {
+        //            e.printStackTrace();
+        //            LogUtils.wTag(TAG, e);
+        //        }
         LogUtils.iTag(TAG, "Install Failure: " + file.getAbsolutePath());
         return false;
     }
@@ -160,10 +164,12 @@ public final class SilentInstallUtils {
      */
     @RequiresPermission(Manifest.permission.DELETE_PACKAGES)
     public static synchronized boolean uninstall(Context context, String packageName) {
-        if (TextUtils.isEmpty(packageName)) return false;
+        if (TextUtils.isEmpty(packageName))
+            return false;
 
         //如果未安装, 直接返回成功即可
-        if (!AppUtils.isAppInstalled(packageName)) return true;
+        if (!AppUtils.isAppInstalled(packageName))
+            return true;
 
         //如果是系统app, 则不支持卸载
         AppUtils.AppInfo appInfo = AppUtils.getAppInfo(packageName);
@@ -202,6 +208,7 @@ public final class SilentInstallUtils {
 
     /**
      * 通过Shell命令静默安装
+     *
      * @param file   apk文件
      * @param isRoot 设备是否有root权限,
      *               如果没有root权限, 在Android7.0及以上设备需要声明 android:sharedUserId="android.uid.shell"
@@ -233,7 +240,8 @@ public final class SilentInstallUtils {
     private static boolean installByReflect(Context context, File file) throws InterruptedException {
         LogUtils.iTag(TAG, "InstallByReflect", file.getPath());
         Method installer = getInstallPackageMethod();
-        if (installer == null) return false;
+        if (installer == null)
+            return false;
 
         final AtomicBoolean result = new AtomicBoolean(false);
         final CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -272,7 +280,8 @@ public final class SilentInstallUtils {
     private static boolean uninstallByReflect(Context context, String packageName) throws InterruptedException {
         LogUtils.iTag(TAG, "UninstallByReflect", packageName);
         Method deleter = getDeletePackageMethod();
-        if (deleter == null) return false;
+        if (deleter == null)
+            return false;
 
         final AtomicBoolean result = new AtomicBoolean(false);
         final CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -300,7 +309,9 @@ public final class SilentInstallUtils {
         return result.get();
     }
 
-    /** 通过流的形式进行静默安装 */
+    /**
+     * 通过流的形式进行静默安装
+     */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @RequiresPermission(Manifest.permission.INSTALL_PACKAGES)
     private static boolean installByPackageInstaller(Context context, File file, AppUtils.AppInfo apkInfo) throws InterruptedException {
@@ -349,7 +360,8 @@ public final class SilentInstallUtils {
             //如果会话已经开启, 但是没有成功, 则需要将会话进行销毁
             try {
                 if (sessionId > 0 && !success) {
-                    if (session != null) session.abandon();
+                    if (session != null)
+                        session.abandon();
                     installer.abandonSession(sessionId);
                 }
             } catch (Throwable ignored) {
@@ -376,7 +388,8 @@ public final class SilentInstallUtils {
 
     @Nullable
     private static Method getInstallPackageMethod() {
-        if (sInstallPackage != null) return sInstallPackage;
+        if (sInstallPackage != null)
+            return sInstallPackage;
         try {
             //noinspection JavaReflectionMemberAccess
             sInstallPackage = PackageManager.class.getMethod("installPackage",
@@ -389,7 +402,8 @@ public final class SilentInstallUtils {
 
     @Nullable
     private static Method getDeletePackageMethod() {
-        if (sDeletePackage != null) return sDeletePackage;
+        if (sDeletePackage != null)
+            return sDeletePackage;
         try {
             //noinspection JavaReflectionMemberAccess
             sDeletePackage = PackageManager.class.getMethod("deletePackage",
@@ -401,14 +415,18 @@ public final class SilentInstallUtils {
     }
 
 
-    /** 安装/卸载回调广播 */
+    /**
+     * 安装/卸载回调广播
+     */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private static final class InstallReceiver extends BroadcastReceiver {
         private final String ACTION = InstallReceiver.class.getName() + SystemClock.elapsedRealtimeNanos();
         private final Context mContext;
         private final String mOperate;
         private final String mParam;
-        /** 用于将异步转同步 */
+        /**
+         * 用于将异步转同步
+         */
         private final CountDownLatch mCountDownLatch = new CountDownLatch(1);
         private boolean mSuccess = false;
 
@@ -432,7 +450,8 @@ public final class SilentInstallUtils {
 
         private IntentSender getIntentSender() {
             return PendingIntent
-                    .getBroadcast(mContext, ACTION.hashCode(), new Intent(ACTION).setPackage(mContext.getPackageName()), PendingIntent.FLAG_UPDATE_CURRENT)
+                    .getBroadcast(mContext, ACTION.hashCode(), new Intent(ACTION).setPackage(mContext.getPackageName()),
+                            PendingIntent.FLAG_UPDATE_CURRENT)
                     .getIntentSender();
         }
 

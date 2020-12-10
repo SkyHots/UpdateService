@@ -97,6 +97,6 @@ public class RabbitMQManager {
         mDispatchService = new ThreadPoolExecutor(10, 10, 1, TimeUnit.MINUTES,
                 new LinkedBlockingQueue<>(), new NameThreadFactory("DispatchService"));
         mSenderService = new SenderService(config);
-        mReceiveService = new ReceiveService(config);
+        mReceiveService = ReceiveService.get(config);
     }
 }

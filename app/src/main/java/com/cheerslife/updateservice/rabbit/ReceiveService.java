@@ -50,10 +50,19 @@ public class ReceiveService implements IMQService {
     private Channel mChannel;
     private String consumerTag = "";
 
-    private RabbitConfig mqManager;
+    private static RabbitConfig mqManager;
+    private static ReceiveService mReceiveService = new ReceiveService();
 
-    ReceiveService(RabbitConfig mqManager) {
-        this.mqManager = mqManager;
+    public static ReceiveService get(RabbitConfig manager) {
+        mqManager = manager;
+        if (mReceiveService != null) {
+            return mReceiveService;
+        } else {
+            return new ReceiveService();
+        }
+    }
+
+    private ReceiveService() {
     }
 
     private void startSubscribe() {
