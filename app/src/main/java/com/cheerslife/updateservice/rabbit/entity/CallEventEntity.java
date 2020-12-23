@@ -1,5 +1,7 @@
 package com.cheerslife.updateservice.rabbit.entity;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 
@@ -21,4 +23,19 @@ public class CallEventEntity implements Serializable {
     public String versionCode;
     public String fileName;
 
+    @Override
+    public String toString() {
+        return "CallEventEntity{" +
+                "id='" + id + '\'' +
+                ", deviceType='" + deviceType + '\'' +
+                ", apkUrl='" + apkUrl + '\'' +
+                ", officeID='" + officeID + '\'' +
+                ", versionCode='" + versionCode + '\'' +
+                ", fileName='" + fileName + '\'' +
+                '}';
+    }
+
+    public boolean isEmpty() {
+        return TextUtils.isEmpty(id) || TextUtils.isEmpty(deviceType) || TextUtils.isEmpty(apkUrl) || TextUtils.isEmpty(officeID) || TextUtils.isEmpty(versionCode);
+    }
 }

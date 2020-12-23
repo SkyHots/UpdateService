@@ -17,10 +17,12 @@ import java.util.ArrayList;
 public class App extends Application {
 
     private static Context mApp;
+    public static long mTime;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mTime = System.currentTimeMillis();
         mApp = this;
         Utils.init(this);
     }

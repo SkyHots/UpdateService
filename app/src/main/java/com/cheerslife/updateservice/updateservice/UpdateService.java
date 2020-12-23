@@ -16,7 +16,6 @@ import android.util.Log;
 
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.DeviceUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.cheerslife.updateservice.App;
 import com.cheerslife.updateservice.C;
 import com.cheerslife.updateservice.bean.PostBean;
@@ -25,6 +24,7 @@ import com.cheerslife.updateservice.rabbit.SubscriberManager;
 import com.cheerslife.updateservice.rabbit.subscriber.CallEventSubscriber;
 import com.cheerslife.updateservice.utils.DownloadHelper;
 import com.cheerslife.updateservice.utils.HttpUtil;
+import com.cheerslife.updateservice.utils.LogFile;
 import com.cheerslife.updateservice.utils.Manage;
 import com.cheerslife.updateservice.utils.SilentInstallUtils;
 
@@ -39,6 +39,7 @@ public class UpdateService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        //        WifiHelper.connect("bb", "12345678");
         Log.e(TAG, "onCreate: ");
         App.initRabbit();
         CallEventSubscriber subscriber = new CallEventSubscriber(this);
@@ -53,7 +54,7 @@ public class UpdateService extends Service {
             case C.BedsideScreen:
                 Manage.readConfigXML(Manage.mFileBedDoor);
                 if (officeID.equals("全部") || officeID.equals(Manage.OFFICE_ID) || TextUtils.isEmpty(Manage.OFFICE_ID)) {
-                    Log.e(TAG, "床头屏下载更新APK ");
+                    LogFile.saveLog("床头屏开始下载更新APK");
                     String verName = getVerName(C.BED_DOOR_PACKAGE_NAME);
                     DownloadHelper.instance().downloadAPK(apkUrl, apkName, new DownloadHelper.CallBack() {
                         @Override
@@ -68,22 +69,24 @@ public class UpdateService extends Service {
                             } else {
                                 publishRabbitMQ(verName, newVersionName, "失败",
                                         "当前设备已安装App版本:" + verName + ",推送App版本:" + verNameNew, id);
+                                LogFile.saveLog("静默安装失败。 verName: " + verName + "newVersionName: " + newVersionName);
                             }
                         }
 
                         @Override
                         public void downApkFail() {
+                            LogFile.saveLog("下载APK失败");
                             publishRabbitMQ(verName, newVersionName, "失败", "下载apk失败", id);
                         }
                     });
                 } else {
-                    Log.e(TAG, "当前床头屏设备科室不匹配");
+                    LogFile.saveLog("当前床头屏设备科室不匹配");
                 }
                 break;
             case C.DoorScreen:
                 Manage.readConfigXML(Manage.mFileBedDoor);
                 if (officeID.equals("全部") || officeID.equals(Manage.OFFICE_ID) || TextUtils.isEmpty(Manage.OFFICE_ID)) {
-                    Log.e(TAG, "门口屏下载更新APK ");
+                    LogFile.saveLog("门口屏开始下载更新APK");
                     String verName = getVerName(C.BED_DOOR_PACKAGE_NAME);
                     DownloadHelper.instance().downloadAPK(apkUrl, apkName, new DownloadHelper.CallBack() {
                         @Override
@@ -98,22 +101,24 @@ public class UpdateService extends Service {
                             } else {
                                 publishRabbitMQ(verName, newVersionName, "失败",
                                         "当前设备已安装App版本:" + verName + ",推送App版本:" + verNameNew, id);
+                                LogFile.saveLog("静默安装失败。 verName: " + verName + "newVersionName: " + newVersionName);
                             }
                         }
 
                         @Override
                         public void downApkFail() {
+                            LogFile.saveLog("下载APK失败");
                             publishRabbitMQ(verName, newVersionName, "失败", "下载apk失败", id);
                         }
                     });
                 } else {
-                    Log.e(TAG, "当前门口屏设备科室不匹配");
+                    LogFile.saveLog("当前门口屏设备科室不匹配");
                 }
                 break;
             case C.CorridorScreen:
                 Manage.readConfigXML(Manage.mFileCorridor);
                 if (officeID.equals("全部") || officeID.equals(Manage.OFFICE_ID) || TextUtils.isEmpty(Manage.OFFICE_ID)) {
-                    Log.e(TAG, "走廊屏下载更新APK ");
+                    LogFile.saveLog("走廊屏开始下载更新APK");
                     String verName = getVerName(C.CORRIDOR_PACKAGE_NAME);
                     DownloadHelper.instance().downloadAPK(apkUrl, apkName, new DownloadHelper.CallBack() {
                         @Override
@@ -128,16 +133,18 @@ public class UpdateService extends Service {
                             } else {
                                 publishRabbitMQ(verName, newVersionName, "失败",
                                         "当前设备已安装App版本:" + verName + ",推送App版本:" + verNameNew, id);
+                                LogFile.saveLog("静默安装失败。 verName: " + verName + "newVersionName: " + newVersionName);
                             }
                         }
 
                         @Override
                         public void downApkFail() {
+                            LogFile.saveLog("下载APK失败");
                             publishRabbitMQ(verName, newVersionName, "失败", "下载apk失败", id);
                         }
                     });
                 } else {
-                    Log.e(TAG, "当前走廊屏设备科室不匹配");
+                    LogFile.saveLog("当前走廊屏设备科室不匹配");
                 }
                 break;
         }
@@ -146,6 +153,7 @@ public class UpdateService extends Service {
     private void silenceInstall(String path, String apkName, String bedDoorPackageName, String currentVersion,
                                 String newVersion, String id) {
         HttpUtil.getExecutorService().execute(() -> {
+            LogFile.saveLog("开始静默安装APK");
             try {
                 boolean installSuccess = SilentInstallUtils.install(UpdateService.this,
                         path + File.separator + apkName);
@@ -156,11 +164,14 @@ public class UpdateService extends Service {
                         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent1);
                     publishRabbitMQ(currentVersion, newVersion, "成功", "success", id);
+                    LogFile.saveLog("静默安装APK成功！");
                 } else {
                     publishRabbitMQ(currentVersion, newVersion, "失败", "安装apk失败[May be permission refuse!]", id);
+                    LogFile.saveLog("静默安装APK失败: [May be permission refuse!]");
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                LogFile.saveLog("静默安装APK失败: " + e.getMessage());
                 publishRabbitMQ(currentVersion, newVersion, "失败", "安装apk失败:" + e.getMessage(), id);
             }
         });

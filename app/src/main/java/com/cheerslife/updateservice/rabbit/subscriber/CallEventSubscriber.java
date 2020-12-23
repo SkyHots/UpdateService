@@ -10,6 +10,7 @@ import com.cheerslife.updateservice.rabbit.RabbitMQManager;
 import com.cheerslife.updateservice.rabbit.config.RabbitConfig;
 import com.cheerslife.updateservice.rabbit.entity.CallEventEntity;
 import com.cheerslife.updateservice.updateservice.UpdateService;
+import com.cheerslife.updateservice.utils.LogFile;
 import com.cheerslife.updateservice.utils.Manage;
 import com.google.gson.Gson;
 
@@ -55,9 +56,10 @@ public class CallEventSubscriber implements IDelegateSubscriber<CallEventEntity>
             }
 
             if (mService != null) {
-                if (entities == null)
+                if (entities == null || entities.isEmpty())
                     return;
 
+                LogFile.saveLog("\n收到mq:" + entities.toString());
                 String deviceType = entities.deviceType;
 
                 String verName = getInstalledAppVerName(deviceType.equals(C.BedsideScreen) ? C.BED_DOOR_PACKAGE_NAME :
@@ -66,6 +68,7 @@ public class CallEventSubscriber implements IDelegateSubscriber<CallEventEntity>
                 String versionNameNew = entities.versionCode;
                 if (verName.equals(versionNameNew)) {
                     Log.e(TAG, "版本号相同，不下载！");
+                    LogFile.saveLog("版本号相同，不下载！ verName: " + verName + " versionNameNew: " + versionNameNew);
                     return;
                 }
 
