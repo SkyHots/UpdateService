@@ -19,6 +19,7 @@ import com.cheerslife.updateservice.App;
 import com.cheerslife.updateservice.C;
 import com.cheerslife.updateservice.R;
 import com.cheerslife.updateservice.utils.HttpUtil;
+import com.cheerslife.updateservice.utils.Manage;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,12 +60,38 @@ public class MainActivity extends AppCompatActivity {
         mPort = findViewById(R.id.port_input);
         mDeviceType = findViewById(R.id.spinner);
 
-        mIp.setText(getIpPort(C.IP, C.DEFAULT_IP));
-        mPort.setText(getIpPort(C.PORT, C.DEFAULT_PORT));
+        int deviceType = Manage.getDeviceType();
+        String ip = getIpPort(C.IP, C.DEFAULT_IP);
+        if (ip.equals(C.DEFAULT_IP)) {
+            if (Manage.DEFAULT_HOST != null) {
+                SPUtils.getInstance().put(C.IP, Manage.DEFAULT_HOST);
+                mIp.setText(Manage.DEFAULT_HOST);
+            } else {
+                mIp.setText(ip);
+            }
+        } else {
+            mIp.setText(ip);
+        }
+
+        String port = getIpPort(C.PORT, C.DEFAULT_PORT);
+        if (port.equals(C.DEFAULT_PORT)) {
+            if (Manage.DEFAULT_PORT != 0) {
+                SPUtils.getInstance().put(C.PORT, String.valueOf(Manage.DEFAULT_PORT));
+                mPort.setText(String.valueOf(Manage.DEFAULT_PORT));
+            } else {
+                mPort.setText(port);
+            }
+        } else {
+            mPort.setText(port);
+        }
 
         int indexPicked = SPUtils.getInstance().getInt(C.DEVICE_TYPE);
         if (indexPicked != -1) {
             mDeviceType.setText(data[indexPicked - 1]);
+        } else {
+            if (deviceType != 0) {
+                SPUtils.getInstance().put(C.DEVICE_TYPE, deviceType);
+            }
         }
     }
 
@@ -98,11 +125,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             SPUtils.getInstance().put(C.IP, ip);
             SPUtils.getInstance().put(C.PORT, port);
-            ToastUtils.showShort(getString(R.string.saveSuccess));
         }
 
-        startService(mService);
-        App.initRabbit();
+        if (view != null) {
+            startService(mService);
+            App.initRabbit();
+        }
     }
 
     public void finish(View view) {
@@ -114,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void test(View view) {
+        save(null);
+
         String url = "http://" + getIpPort(C.IP, C.DEFAULT_IP) + ":" + getIpPort(C.PORT, C.DEFAULT_PORT) + "/api/iotCenter" +
                 "/Screen/GetServerTime";
         HttpUtil.sendHttpRequest(url, new HttpUtil.HttpCallbackListener() {
@@ -127,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
                 ToastUtils.showLong("连接" + getIpPort(C.IP, C.DEFAULT_IP) + "失败");
             }
         });
-
     }
 
     public void pickDeviceType(View view) {
@@ -143,6 +172,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.show();
-
     }
 }

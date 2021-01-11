@@ -118,8 +118,7 @@ public class Manage {
     }
 
     /**
-     *
-     * @return  1.床头屏 2.门口屏 3.走廊屏
+     * @return 1.床头屏 2.门口屏 3.走廊屏
      */
     public static int getDeviceType() {
         int type = SPUtils.getInstance().getInt(C.DEVICE_TYPE);
@@ -130,13 +129,16 @@ public class Manage {
             if (packages.contains(C.BED_DOOR_PACKAGE_NAME)) {
                 readConfigXML(mFileBedDoor);
                 if (!TextUtils.isEmpty(BED_NO)) {
+                    SPUtils.getInstance().put(C.DEVICE_TYPE, 1);
                     return 1;
                 } else {
                     if (!TextUtils.isEmpty(WARD_ID)) {
+                        SPUtils.getInstance().put(C.DEVICE_TYPE, 2);
                         return 2;
                     }
                 }
             } else if (packages.contains(C.CORRIDOR_PACKAGE_NAME)) {
+                SPUtils.getInstance().put(C.DEVICE_TYPE, 3);
                 return 3;
             }
         }
