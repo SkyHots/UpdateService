@@ -23,6 +23,6 @@ public class C {
     public static final String PORT = "port";
     public static final String DEVICE_TYPE = "device_type";
 
-    public static final String DEFAULT_IP = "172.16.0.85";
+    public static final String DEFAULT_IP = "192.168.26.201";
     public static final String DEFAULT_PORT = "900";
 }

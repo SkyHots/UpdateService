@@ -36,23 +36,15 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".updateservice.BootReceiver"
-            android:enabled="true"
-            android:exported="true">
+        <receiver android:name=".updateservice.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <service
-            android:name="com.cheerslife.updateservice.updateservice.UpdateService"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedService">
+        <service android:name="com.cheerslife.updateservice.updateservice.UpdateService">
             <intent-filter>
                 <action android:name="com.cheerslife.updateservice.updateservice.ApkService" />
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
 

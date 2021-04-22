@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.Utils;
 import com.cheerslife.updateservice.rabbit.RabbitMQManager;
 import com.cheerslife.updateservice.rabbit.SubscriberManager;
 import com.cheerslife.updateservice.rabbit.config.RabbitConfig;
+import com.cheerslife.updateservice.utils.CrashLogService;
 import com.cheerslife.updateservice.utils.Manage;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class App extends Application {
         mTime = System.currentTimeMillis();
         mApp = this;
         Utils.init(this);
+        CrashLogService.getInstance().setOnCrashedListener(log -> android.os.Process.killProcess(android.os.Process.myPid()));
     }
 
     public static Context getApp() {
